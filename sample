@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        BACKEND_URL = "http://localhost:8000"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo '🔄 Cloning Git repository...'
+                git branch: 'main', url: 'https://github.com/2317042/Calendar-Picker.git'
+            }
+        }
+
+        stage('Start Backend') {
+            steps {
+                echo '🚀 Starting Backend...'
+                bat "start /B python backend.py"
+                sleep 5
+            }
+        }
+
+        stage('Start Frontend') {
+            steps {
+                echo '🚀 Starting Frontend...'
+                bat "start /B python frontend.py"
+                sleep 5
+            }
+        }
+
+        stage('Open Frontend') {
+            steps {
+                echo '🌐 Opening Calendar Picker in browser...'
+                bat "start http://localhost:5000"
+            }
+        }
+
+        stage('Pipeline Success') {
+            steps {
+                echo '✅ Calendar Picker running at http://localhost:5000'
+            }
+        }
+    }
+}
